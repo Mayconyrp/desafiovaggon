@@ -4,12 +4,10 @@ import './App.css';
 import {BrowserRouter, Routes, Route,} from "react-router-dom"
 import Home from "./pages/home/Home"
 import Register from "./pages/register/register"
-import Login from "./pages/login/login"
-import Navbar from "./pages/navbar/navbar"
 import Listar from "./pages/listar/listar"
 import Atividade from './pages/atividade/atividade';
 import ListarTarefa from './pages/ListarTarefa/listartarefa';
-
+import Update from './pages/update/update'
 function App (props) {
   return (
     <div className="App">
@@ -18,11 +16,10 @@ function App (props) {
           <Routes>
             <Route path="/" element={<Home/>}></Route>
             <Route path="/register" element={<Register/>}></Route>
-            <Route path="/login" element={<Login/>}></Route>
-            <Route path="/navbar" element={<Navbar/>}></Route>
             <Route path="/listar" element={<Listar/>}></Route>
             <Route path="/atividade" element={<Atividade/>}></Route>
             <Route path="/listartarefas" element={<ListarTarefa/>}></Route>
+            <Route path="/update/:id" element={<Update />}/>
           </Routes>
         </div>
       </BrowserRouter>

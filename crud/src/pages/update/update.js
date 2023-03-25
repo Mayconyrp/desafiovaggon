@@ -1,45 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Axios from "axios"
-import { FormGroup, Input, Label, Button } from 'reactstrap';
+import { FormGroup, Input, Label } from 'reactstrap';
+import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 const Atividade = () => {
+    const { id } = useParams();
+    const [listAtv, setListAtv] = useState([]);
     const [values, setValues] = useState({
         nome: '',
-        descricao:'',
+        descricao: '',
         datahorainicio: '',
         datahorafim: '',
         status: ''
     });
 
-    const handleChangeValues = (value) => {
-        setValues((prevValue) => ({
-            ...prevValue,
-            [value.target.name]: value.target.value,
-        }))
-        console.log(value.target.value);
+    useEffect(() => {
+        Axios.get("http://localhost:8080/listartarefas").then((response) => {
+            setListAtv(response.data);
+        });
+    }, []);
+
+    useEffect(() => {
+        const atividade = listAtv.find((atividade) => atividade.id === parseInt(id));
+        if (atividade) {
+            setValues({
+                nome: atividade.nome,
+                descricao: atividade.descricao,
+                datahorainicio: atividade.datahorainicio,
+                datahorafim: atividade.datahorafim,
+                status: atividade.status,
+            });
+        }
+    }, [id, listAtv]);
+
+    const handleChangeValues = (event) => {
+        const { id, value } = event.target;
+        setValues(prevValues => ({ ...prevValues, [id]: value }));
     };
 
     const handleClickButton = () => {
-        console.log(values)
-        Axios.post("http://localhost:8080/atividade", {
+        Axios.put(`http://localhost:8080/atividade/${id}`, {
             nome: values.nome,
             descricao: values.descricao,
             datahorainicio: values.datahorainicio,
             datahorafim: values.datahorafim,
             status: values.status,
-        }
-        ).then((resposta) => {
-            console.log(resposta)
-        }).catch((error) => {
-            console.log(error)
         })
-    }
+            .then((response) => {
+                console.log(response.data);
+                // limpa os valores após a requisição ter sido feita com sucesso
+                setValues({
+                    nome: '',
+                    descricao: '',
+                    datahorainicio: '',
+                    datahorafim: '',
+                    status: ''
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     return (
-        <div className="App">
+        <div className="Atualizar">
             <div className="containerCadastro">
-                <h1 className='Cabecalho'>Cadastrar Atividades</h1>
+                <h1 className='Cabecalho'>Atualizar Atividades</h1>
 
                 <FormGroup>
                     <Label for="nome">Nome da atividade</Label>
@@ -77,6 +104,7 @@ const Atividade = () => {
                     />
                 </FormGroup>
 
+
                 <FormGroup>
                     <Label for="datahorafim">Data e hora de fim</Label>
                     <Input
@@ -103,19 +131,18 @@ const Atividade = () => {
                         <option value="Concluída">Concluída</option>
                     </Input>
                 </FormGroup>
-                
-                <Button color="info" block className="inputCadastro" onClick={() => handleClickButton()}>
-                    Cadastrar
-                </Button>
-                <Link to={"/"}>
-                    <Button color="danger" block>Voltar</Button>
-                </Link>
 
+
+
+                <button className="inputCadastro" onClick={handleClickButton}>
+                    Atualizar
+                </button>
+                <Link to={'/listartarefas'}>
+                <button >Voltar</button>
+                </Link>
             </div>
         </div>
-    );
+    )
 }
 
-export default Atividade;
-
-
+export default Atividade

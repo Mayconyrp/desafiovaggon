@@ -6,7 +6,6 @@ const cors = require("cors")
 const conexaodb = require("./database/db")
 const Usuario = require("./models/usuario")
 const Atividades = require("./models/atividade")
-const Cadastro = require("./models/registrousuario")
 
 // view engine
 app.set('view engine', 'ejs')
@@ -47,17 +46,17 @@ app.post("/atividade", (req, res) => {
     console.log(status)
 
     Atividades.create({
-        nome:nome,
-        descricao:descricao, 
-        datahorainicio:datahorainicio,
-        datahorafim:datahorafim, 
-        status:status
+        nome: nome,
+        descricao: descricao,
+        datahorainicio: datahorainicio,
+        datahorafim: datahorafim,
+        status: status
     }).then((enviaratividade) => {
         res.send('cadastro de atividades efetuado!' + enviaratividade)
     })
 
 })
-/*
+
 app.post("/cadastro", (req, res) => {
     const { nome } = req.body
     const { senha } = req.body
@@ -67,14 +66,17 @@ app.post("/cadastro", (req, res) => {
     Usuario.create({
         login: nome,
         senha: senha,
+    }).then((dadoscadastro) => {
+        console.log(dadoscadastro)
+        res.send("Dados enviado")
     })
 
 })
-*/
+
 app.get("/listar", (req, res) => {
     Usuario.findAll({
     }).then((usuarios) => {
-       // console.log(usuarios.map(usuarios => usuarios.toJSON()))
+        // console.log(usuarios.map(usuarios => usuarios.toJSON()))
         res.send(usuarios)
     }).catch((error) => {
         console.log(error)
@@ -84,12 +86,48 @@ app.get("/listar", (req, res) => {
 app.get("/listartarefas", (req, res) => {
     Atividades.findAll({
     }).then((tarefas) => {
-       // console.log(usuarios.map(usuarios => usuarios.toJSON()))
+        // console.log(usuarios.map(usuarios => usuarios.toJSON()))
         res.send(tarefas)
     }).catch((error) => {
         console.log(error)
     })
 })
+
+app.put('/atividade/:id', (req, res) => {
+    const id = req.params.id;
+    const { nome, descricao, datahorainicio, datahorafim, status } = req.body;
+
+    Atividades.update({
+        nome: nome,
+        descricao: descricao,
+        datahorainicio: datahorainicio,
+        datahorafim: datahorafim,
+        status: status
+    }, {
+        where: {
+            id: id
+        }
+    }).then(() => {
+        res.send('Atividade atualizada com sucesso');
+    }).catch((error) => {
+        console.log(error);
+        res.status(500).send('Erro ao atualizar atividade');
+    });
+});
+
+app.delete("/delete/:id", (req, res) => {
+    const id = req.params.id;
+    Atividades.destroy({
+        where: {
+            id: id
+        }
+    }).then(() => {
+        res.send('Excluido com sucesso');
+    }).catch((error) => {
+        console.log(error);
+    })
+})
+
 
 
 

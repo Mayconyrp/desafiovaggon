@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../Card/CardTarefa.module.css"
+import styles from "./CardTarefa.module.css"
 export default function CardTarefa(props) {
     return (
         <div className={styles.card}>

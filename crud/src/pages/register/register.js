@@ -1,6 +1,9 @@
 import './register.module.css'
 import React, { useState } from 'react';
 import Axios from "axios"
+import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
+import { Link } from "react-router-dom";
+
 
 
 const Register = () => {
@@ -30,32 +33,37 @@ const Register = () => {
             console.log(error)
         })
     }
-
+    /* Base de um FRONT P CADASTRO*/
     return (
         <div className="App">
             <div className="containerCadastro">
-                <h1 className='Cabecalho'>Teste</h1>
-                <input type="text"
-                    name="nome"
-                    placeholder="Insira seu nome"
-                    className="inputCadastro"
-                    onChange={handleChangeValues}></input>
+                <h1 className='Cabecalho'>Cadastro</h1>
+                <Form>
+                    <FormGroup>
+                        <Label for="nome">Nome:</Label>
+                        <Input type="text"
+                            name="nome"
+                            id="nome"
+                            onChange={handleChangeValues} />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="senha">Senha:</Label>
+                        <Input type="password"
+                            name="senha"
+                            id="senha"
+                            onChange={handleChangeValues} />
+                    </FormGroup>
+                    <Button color="primary" block onClick={() => handleClickButton()}>Cadastrar</Button>
+                    <Link to={"/"}>
+                    <Button color="danger" block>Voltar</Button>
+                </Link>
 
-                <input type="text"
-                    name="senha"
-                    placeholder="Insira sua senha"
-                    className="inputCadastro"
-                    onChange={handleChangeValues}></input>
-
-                <button className="inputCadastro"
-                    onClick={() => handleClickButton()}
-                >Cadastrar
-                </button>
-
+                </Form>
             </div>
         </div>
+    );
 
-    )
+
 
 }
 
